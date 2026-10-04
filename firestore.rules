@@ -1,0 +1,81 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 1. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Hardened Global Helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    // Validation Blueprint for userPublic
+    function isValidUser(data) {
+      return data.keys().hasAll(['uid', 'displayName', 'email'])
+        && data.keys().hasOnly(['uid', 'displayName', 'photoURL', 'email', 'createdAt', 'updatedAt'])
+        && data.uid is string && data.uid.size() <= 128
+        && data.uid == request.auth.uid
+        && data.displayName is string && data.displayName.size() <= 100
+        && data.email is string && data.email.size() <= 150;
+    }
+
+    // Validation Blueprint for document
+    function isValidDoc(data) {
+      return data.keys().hasAll(['id', 'ownerId', 'title', 'fileName'])
+        && data.keys().hasOnly([
+             'id', 'ownerId', 'title', 'fileName', 'fileSizeBytes', 'pageCount', 
+             'version', 'isEncrypted', 'isCertified', 'certificationAuthority', 'securityMessage',
+             'formStatus', 'sensitivityLabel', 'watermark', 'createdAt', 'updatedAt', 
+             'layers', 'attachments', 'bookmarks', 'annotations', 'formFields', 
+             'batesPrefix', 'batesStartNumber', 'pages'
+           ])
+        && data.id is string && data.id.size() <= 128
+        && data.ownerId is string && data.ownerId.size() <= 128
+        && data.ownerId == request.auth.uid
+        && data.title is string && data.title.size() <= 200
+        && data.fileName is string && data.fileName.size() <= 250;
+    }
+
+    // Match users collection
+    match /users/{userId} {
+      allow read: if isSignedIn() && (request.auth.uid == userId);
+      allow create: if isSignedIn() && (request.auth.uid == userId) && isValidUser(incoming()) && incoming().createdAt == request.time;
+      allow update: if isSignedIn() && (request.auth.uid == userId) && isValidUser(incoming()) && incoming().updatedAt == request.time;
+      allow delete: if false; // Profiles are permanent
+
+      // Sub-collection of documents
+      match /documents/{documentId} {
+        allow read: if isSignedIn() && (request.auth.uid == userId);
+        allow create: if isSignedIn() 
+          && (request.auth.uid == userId) 
+          && isValidId(documentId)
+          && isValidDoc(incoming()) 
+          && incoming().createdAt is string;
+          
+        allow update: if isSignedIn() 
+          && (request.auth.uid == userId) 
+          && isValidId(documentId)
+          && isValidDoc(incoming()) 
+          && incoming().updatedAt is string
+          && incoming().id == existing().id
+          && incoming().ownerId == existing().ownerId;
+          
+        allow delete: if isSignedIn() && (request.auth.uid == userId);
+      }
+    }
+  }
+}

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="chad-omnidpdfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#EA1C24" />
+      <stop offset="100%" stop-color="#990000" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#000000" flood-opacity="0.35" />
+    </filter>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="#0F172A" />
+  <rect x="32" y="32" width="448" height="448" rx="88" fill="url(#chad-omnidpdfGrad)" filter="url(#shadow)" />
+  <g fill="#FFFFFF" fill-rule="evenodd" transform="translate(96, 96) scale(0.625)">
+    <!-- Chad-OmniPDF stylized tri-ribbon vector logo -->
+    <path d="M256 40 C170 40 100 110 100 196 C100 248 126 294 166 322 C132 376 96 426 60 472 C120 472 176 438 226 384 C244 388 268 388 286 384 C336 438 392 472 452 472 C416 426 380 376 346 322 C386 294 412 248 412 196 C412 110 342 40 256 40 Z M256 100 C306 100 346 142 346 196 C346 226 332 254 310 270 C280 230 256 160 256 100 Z M202 270 C180 254 166 226 166 196 C166 142 206 100 256 100 C256 160 232 230 202 270 Z" />
+  </g>
+</svg>

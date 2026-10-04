@@ -1,0 +1,8 @@
+{
+  "name": "Chad-OmniPDF Pro \u0026 Studio - Enterprise Document Intelligence Platform",
+  "description": "Enterprise-grade PDF manipulation, viewing, and AI document intelligence platform superseding Adobe Chad-OmniPDF with Megaverb tools, permanent redaction, PDF spaces, and AI assistant.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "entities": {
+    "userPublic": {
+      "title": "User Public Profile",
+      "description": "Publicly accessible user profile details.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Unique user ID matching request.auth.uid"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name from Google sign-in"
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Avatar photo URL from Google"
+        },
+        "email": {
+          "type": "string",
+          "description": "User email address"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["uid", "displayName", "email"]
+    },
+    "document": {
+      "title": "User Document",
+      "description": "A PDF document metadata and annotation structure stored in user space.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "ownerId": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "fileName": {
+          "type": "string"
+        },
+        "fileSizeBytes": {
+          "type": "integer"
+        },
+        "pageCount": {
+          "type": "integer"
+        },
+        "version": {
+          "type": "string"
+        },
+        "isEncrypted": {
+          "type": "boolean"
+        },
+        "isCertified": {
+          "type": "boolean"
+        },
+        "formStatus": {
+          "type": "string",
+          "enum": ["fillable", "signed", "none"]
+        },
+        "sensitivityLabel": {
+          "type": "string",
+          "enum": ["General", "Confidential", "Highly Confidential", "Public"]
+        },
+        "watermark": {
+          "type": "string"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "ownerId", "title", "fileName"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "userPublic",
+      "description": "User profile collection."
+    },
+    "/users/{userId}/documents/{documentId}": {
+      "schema": "document",
+      "description": "Documents owned by the specific user."
+    }
+  }
+}
